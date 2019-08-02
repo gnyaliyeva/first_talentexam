@@ -1,7 +1,4 @@
 special_triangles = [(3,4,5),(5,12,13),(8,15,17),(7,24,25)]
-# for i in special_triangles:
-#     print(i[k])
-#print(special_triangles[1][2])
 
 class Pythagorean_Detector():
 
@@ -19,16 +16,19 @@ class Pythagorean_Detector():
             if total == self.n:
                 flag = True
                 break
-        self.print_(i, k, total, flag)
+        self.print_(i, k-1, total, flag)
           
 
     def print_(self,i,k,total,flag):
         if flag == True:
-            print("i:",i,"k:",k,"total:",total)
+            print(i[0]*k," + ",i[1]*k," = ",i[2]*k)
+            print(i[0]*k," + ",i[1]*k," + ",i[2]*k," = ",total)
+            print(total," is compatible with Pythagorean triple!")
+
         else:
             print("The entry value is not compatible with Pythagorean triple set!")
 
-obj = Pythagorean_Detector(15)
+obj = Pythagorean_Detector(int(input("Enter the N value:")))
 obj.func()
 
 
