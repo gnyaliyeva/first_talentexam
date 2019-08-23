@@ -1,0 +1,46 @@
+class RequestData:
+   """
+       RequestData
+   """
+   BASE_URL = 'https://randomuser.me/api/'
+​
+   def __init__(self, count:str, *args, **kwargs):
+       self.url = self.BASE_URL + '?result={}'.format(count)
+
+   @error_handler
+   def _make_request(self):
+       response = requests.get(self.url)
+       return response
+​
+   @converter
+   def get_location(self):
+       results = self._make_request()
+       for item in results:
+           yield item.get('location')
+​
+   @converter
+   def get_login(self):
+       results = self._make_request()
+       for item in results:
+           yield item.get('login')
+
+
+1. Class: RequestData
+    Bu class'ın amacı; verilen API url'ine get isteği atarak, dönen veriler üzerinde işlemler yapmaktır.
+
+2. Method: __init__
+    Class içerisinde kullanılacak URL'i tanımlayan ve değer atayan methoddur. Mevcut URL'in result endpoin'ine diğer methodlardan
+    bir değer gönderilir. Bu değer ilgili methodun döndürdüğü sonuç miktarıdır.
+
+3. Method: _make_request
+    __init__ methodunda oluşturulan BASE_URL'e get isteği atar ve bir sonuç döndürür. Url'den geçerli bir sonuç dönüp dönmediğini
+    'error_handler' isimli decorator ile saptamaktadır. Eğer bir sonuç dönmüyorsa hata kodu döndürmektedir.
+
+4. Method: get_location
+    BASE_URL'e bir get isteği atar ve dönen sonuç içersinden 'location' key'ine ait value'ları alır. Bu işlemi yapmadan önce
+    'converter' isimli decorator yardımı ile dönen response'u list'e çevirmektedir.
+
+4. Method: get_login
+    BASE_URL'e bir get isteği atar ve dönen sonuç içersinden 'login' key'ine ait value'ları alır. Bu işlemi yapmadan önce
+    'converter' isimli decorator yardımı ile dönen response'u list'e çevirmektedir.
+

@@ -1,0 +1,54 @@
+Decoratorler, hazırlanan bir fonksiyonun işlevini ihtayaca uygun bir şekilde daha sonradan değiştirerek kullanılmaya yarar.
+Parametre olarak fonksiyon alır ve geriye yine bir fonksyion döndürür. Kullanılmak istenen fonksiyonun üzerine '@' şeklinde
+pie sytax konularak çağırılır.
+
+Aşağıda örnek bir decorator kullanımı verilmiştir.
+
+import requests
+
+url = 'https://api.ipgeolocation.io/astronomy?apiKey=6d1fb01c46644d59a53270843ab79b93'
+
+"""
+    Verilen API üzerinden dönen veriler arasında float değerleri saptayıp, noktadan sonraki ilk 2 değeri alacak şekilde
+    yeniden düzenleyen decorator.
+"""
+def decorator(func):
+    def wrapper(*args, **kwargs):
+
+        response = func(*args, **kwargs)
+
+        def detect_type(response):
+
+            for item_key, item_val in response.items():
+
+                if isinstance(item_val, dict):
+                    yield(item_val)
+
+                elif isinstance(item_val, list):
+                    if isinstance(item_val, float):
+                        for i in item_val:
+                            response[item_val][i] = format(item_val, '.2f')
+
+                else:
+                    if isinstance(item_val, float):
+                        response[item_key] = format(item_val, '.2f')
+                        yield(response)
+
+        for index, result in enumerate(detect_type(response)):
+            print(index, result)
+
+        print(response)
+
+        return response
+    return wrapper
+
+
+@decorator
+def make_request(data):
+    return data
+
+
+if __name__ == '__main__':
+    data = requests.get(url)
+    make_request(data.json())
+
