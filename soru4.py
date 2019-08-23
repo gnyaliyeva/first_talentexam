@@ -48,12 +48,12 @@ class RequestData:
         for item in results:
             yield item.get('login')
 
-def print_names(amount):
+def print_streets(amount):
 
     results = RequestData(amount)
-    names = results.get_login()
+    location = results.get_location()
 
     for i in range(amount):
-        print(names[i]['username'])
+        print(location[i]['street'])
 
-print_names(100)
+print_streets(20)
